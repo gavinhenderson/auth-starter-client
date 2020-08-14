@@ -24,7 +24,6 @@ const Home = () => {
     authService,
   } = useOktaAuth();
   const login = () => authService.login("/profile");
-  console.log({ authService });
 
   if (loading) return <p>Loading</p>;
   if (authenticated) return <p>Youre In</p>;
