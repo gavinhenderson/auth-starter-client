@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+// import styled from "styled-components";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Security, useOktaAuth, LoginCallback } from "@okta/okta-react";
 
-import TextField from "@material-ui/core/TextField";
-import Paper from "@material-ui/core/Paper";
-import { Button, Typography } from "@material-ui/core";
-import LockIcon from "@material-ui/icons/Lock";
+// import TextField from "@material-ui/core/TextField";
+// import Paper from "@material-ui/core/Paper";
+import { Button } from "@material-ui/core";
+// import LockIcon from "@material-ui/icons/Lock";
 
 const CALLBACK_PATH = "/implicit/callback";
 
