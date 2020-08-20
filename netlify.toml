@@ -1,4 +1,9 @@
 [[redirects]]
+  from = "/.well-known/acme-challenge/V4RcF3cJlbKIu0ePrZBscU44993YREiiblAhLPy9Ecw"
+  to = "/.well-known/acme-challenge/V4RcF3cJlbKIu0ePrZBscU44993YREiiblAhLPy9Ecw"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
