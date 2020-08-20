@@ -2,3 +2,6 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+[build]
+  command = "yarn build && mkdir -p build/.well-known/acme-challenge/ && echo \"${CHALLENGE_CONTENT}\" > ./build/.well-known/acme-challenge/${CHALLENGE_NAME}"
