@@ -4,4 +4,4 @@
   status = 200
 
 [build]
-  command = "yarn build && mkdir -p build/.well-known/acme-challenge/ && echo \"${CHALLENGE_CONTENT}\" > ./build/.well-known/acme-challenge/${CHALLENGE_NAME}"
+  command = "yarn build && mkdir -p build/.well-known/acme-challenge/ && echo \"xOqtlJas47G9sMlw91ZGRFfS5QVNDrWWteNdnTGAzm8.V4RcF3cJlbKIu0ePrZBscU44993YREiiblAhLPy9Ecw\" > ./build/.well-known/acme-challenge/xOqtlJas47G9sMlw91ZGRFfS5QVNDrWWteNdnTGAzm8"
