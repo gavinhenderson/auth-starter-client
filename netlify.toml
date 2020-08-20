@@ -1,5 +1,5 @@
 [[redirects]]
-  from = "/.well-known/acme-challenge/V4RcF3cJlbKIu0ePrZBscU44993YREiiblAhLPy9Ecw"
+  from = "/.well-known/acme-challenge/z--BUe2ud4KD-KuEqm-RuyOF6oQT16LQHRzvGymldx0.V4RcF3cJlbKIu0ePrZBscU44993YREiiblAhLPy9Ecw"
   to = "/acme-challenge"
   status = 200
 
@@ -9,4 +9,4 @@
 #   status = 200
 
 [build]
-  command = "yarn build && mkdir -p build/.well-known/acme-challenge/ && echo \"xOqtlJas47G9sMlw91ZGRFfS5QVNDrWWteNdnTGAzm8.V4RcF3cJlbKIu0ePrZBscU44993YREiiblAhLPy9Ecw\" > ./build/acme-challenge"
+  command = "yarn build && mkdir -p build/.well-known/acme-challenge/ && echo \"z--BUe2ud4KD-KuEqm-RuyOF6oQT16LQHRzvGymldx0.V4RcF3cJlbKIu0ePrZBscU44993YREiiblAhLPy9Ecw\" > ./build/acme-challenge"
