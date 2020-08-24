@@ -19,12 +19,17 @@ const Home = () => {
     authState: { loading, authenticated },
     authService,
   } = useOktaAuth();
-  const login = () => authService.login("/profile");
+  const login = () => authService.login("/");
 
   if (loading) return <p>Loading</p>;
   if (authenticated) return <p>Youre In</p>;
 
-  return <Button onClick={login}>Login</Button>;
+  return (
+    <div>
+      <Button onClick={login}>Login</Button>
+      <Profile />
+    </div>
+  );
 };
 
 const Profile = () => {
@@ -44,10 +49,12 @@ const Profile = () => {
 
   return (
     <div>
-      {userInfo && (
+      {userInfo ? (
         <div>
           <p>Welcome back, {userInfo.name}!</p>
         </div>
+      ) : (
+        <p>Youre not logged in! Press login above</p>
       )}
     </div>
   );
@@ -62,9 +69,6 @@ const App = () => {
         </Route>
         <Route path={CALLBACK_PATH}>
           <LoginCallback></LoginCallback>
-        </Route>
-        <Route path="/profile">
-          <Profile></Profile>
         </Route>
       </Security>
     </Router>
