@@ -15,6 +15,8 @@ const oktaConfig = {
 };
 
 const Home = () => {
+  console.log("react app loaded");
+
   const {
     authState: { loading, authenticated },
     authService,
