@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Security, useOktaAuth, LoginCallback } from "@okta/okta-react";
-
-import { Button } from "@material-ui/core";
+import LockIcon from "@material-ui/icons/Lock";
+import { Button, Paper, TextField, Typography } from "@material-ui/core";
+import { useForm } from "react-hook-form";
+import { OktaAuth } from "@okta/okta-auth-js";
 
 const CALLBACK_PATH = "/implicit/callback";
 
@@ -12,54 +15,6 @@ const oktaConfig = {
   redirectUri: window.location.href + "implicit/callback",
   scopes: ["openid", "profile", "email"],
   pkce: true,
-};
-
-const Home = () => {
-  console.log("react app loaded");
-
-  const {
-    authState: { loading, authenticated },
-    authService,
-  } = useOktaAuth();
-  const login = () => authService.login("/");
-
-  if (loading) return <p>Loading</p>;
-  if (authenticated) return <p>Youre In</p>;
-
-  return (
-    <div>
-      <Button onClick={login}>Login</Button>
-      <Profile />
-    </div>
-  );
-};
-
-const Profile = () => {
-  const { authState, authService } = useOktaAuth();
-  const [userInfo, setUserInfo] = useState(null);
-
-  useEffect(() => {
-    if (!authState.isAuthenticated) {
-      // When user isn't authenticated, forget any user info
-      setUserInfo(null);
-    } else {
-      authService.getUser().then((info) => {
-        setUserInfo(info);
-      });
-    }
-  }, [authState, authService]);
-
-  return (
-    <div>
-      {userInfo ? (
-        <div>
-          <p>Welcome back, {userInfo.name}!</p>
-        </div>
-      ) : (
-        <p>Youre not logged in! Press login above</p>
-      )}
-    </div>
-  );
 };
 
 const App = () => {
@@ -76,5 +31,113 @@ const App = () => {
     </Router>
   );
 };
+
+function Home() {
+  const { authState, authService } = useOktaAuth();
+  const [userInfo, setUserInfo] = useState(null);
+  const { register, handleSubmit, watch, errors } = useForm();
+
+  useEffect(() => {
+    if (!authState.isAuthenticated) {
+      // When user isn't authenticated, forget any user info
+      setUserInfo(null);
+    } else {
+      authService.getUser().then((info) => {
+        setUserInfo(info);
+      });
+    }
+  }, [authState, authService]);
+
+  const onSubmit = async ({ email, password }) => {
+    const oktaAuth = new OktaAuth(oktaConfig);
+
+    try {
+      const { sessionToken } = await oktaAuth.signIn({
+        username: email,
+        password,
+      });
+      authService.redirect({ sessionToken });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  // oktaAuth
+  //   .signIn({ username, password })
+  //   .then((res) => {
+  //     const sessionToken = res.sessionToken;
+  //     setSessionToken(sessionToken);
+  //     // sessionToken is a one-use token, so make sure this is only called once
+  //     authService.redirect({ sessionToken });
+  //   })
+  //   .catch((err) => console.log("Found an error", err));
+
+  return (
+    <Background>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <CenteredPaper>
+          <Stack>
+            <HeaderSection>
+              <Logo fontSize="large" />
+              <Typography variant="h5">
+                Super Awesome Application Inc.
+              </Typography>
+            </HeaderSection>
+            <input
+              ref={register}
+              id="email"
+              name="email"
+              label="Email"
+              variant="outlined"
+            />
+            <input
+              ref={register}
+              id="password"
+              name="password"
+              label="Password"
+              variant="outlined"
+            />
+            <Button type="submit">Login</Button>
+          </Stack>
+        </CenteredPaper>
+      </form>
+    </Background>
+  );
+}
+
+const TextInput = styled(TextField)`
+  && {
+    margin: 1rem 0;
+  }
+`;
+
+const Logo = styled(LockIcon)`
+  color: #3f51b5;
+  font-size: 2rem;
+`;
+
+const HeaderSection = styled.div`
+  text-align: center;
+  max-width: 200px;
+  margin: 0 auto;
+`;
+
+const CenteredPaper = styled(Paper)`
+  max-width: 400px;
+  padding: 2rem;
+`;
+
+const Background = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background: #f5f5f5;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+`;
+
+const Stack = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 export default App;
