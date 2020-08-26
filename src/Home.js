@@ -4,10 +4,15 @@ import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { Paper, Button, Typography, TextField } from "@material-ui/core";
 import LockIcon from "@material-ui/icons/Lock";
+import { LoggedInDash } from "./LoggedInDash";
 
 export const Home = () => {
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const { register, handleSubmit } = useForm();
+
+  if (isAuthenticated) {
+    return <LoggedInDash />;
+  }
 
   return (
     <Background>

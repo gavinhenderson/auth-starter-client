@@ -1,5 +1,6 @@
 import { OktaAuth } from "@okta/okta-auth-js";
 import { useOktaAuth } from "@okta/okta-react/dist/OktaContext";
+import { useEffect, useState, useCallback } from "react";
 
 export const oktaConfig = {
   clientId: "0oapy5xhfcUOfOi8G4x6",
@@ -11,7 +12,26 @@ export const oktaConfig = {
 
 export const useAuth = () => {
   const oktaAuth = new OktaAuth(oktaConfig);
-  const { authService } = useOktaAuth();
+  const [user, setUser] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(false);
+  const {
+    authService,
+    authState: { isAuthenticated },
+  } = useOktaAuth();
+
+  const loadUser = useCallback(async () => {
+    setLoadingUser(true);
+    const fetchedUser = await authService.getUser();
+    setUser(fetchedUser);
+    setLoadingUser(false);
+  }, [authService]);
+
+  // Apparently use effects have to synchronus
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadUser();
+    }
+  }, [loadUser, isAuthenticated]);
 
   const login = async ({ email, password }) => {
     const { sessionToken } = await oktaAuth.signIn({
@@ -21,5 +41,9 @@ export const useAuth = () => {
     authService.redirect({ sessionToken });
   };
 
-  return { login };
+  const logout = async () => {
+    await oktaAuth.signOut();
+  };
+
+  return { login, isAuthenticated, user, loadingUser, logout };
 };
