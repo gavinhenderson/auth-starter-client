@@ -36,7 +36,7 @@ export const Home = () => {
               label="Password"
               variant="outlined"
             />
-            <Button type="submit" variant="contained">
+            <Button color="primary" type="submit" variant="contained">
               Login
             </Button>
           </Stack>
@@ -59,7 +59,7 @@ const Logo = styled(LockIcon)`
 
 const HeaderSection = styled.div`
   text-align: center;
-  max-width: 200px;
+  max-width: 400px;
   margin: 0 auto;
 `;
 
