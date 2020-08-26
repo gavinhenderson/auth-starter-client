@@ -1,14 +1,12 @@
 import React from "react";
 import { useAuth } from "./useAuth";
-import { useForm } from "react-hook-form";
-import styled from "styled-components";
-import { Paper, Button, Typography, TextField } from "@material-ui/core";
-import LockIcon from "@material-ui/icons/Lock";
+
 import { LoggedInDash } from "./LoggedInDash";
+import { SignInForm } from "./SignInForm";
+import styled from "styled-components";
 
 export const Home = () => {
-  const { login, isAuthenticated } = useAuth();
-  const { register, handleSubmit } = useForm();
+  const { isAuthenticated } = useAuth();
 
   if (isAuthenticated) {
     return <LoggedInDash />;
@@ -16,62 +14,10 @@ export const Home = () => {
 
   return (
     <Background>
-      <form onSubmit={handleSubmit(login)}>
-        <CenteredPaper>
-          <Stack>
-            <HeaderSection>
-              <Logo fontSize="large" />
-              <Typography variant="h5">
-                Super Awesome Application Inc.
-              </Typography>
-            </HeaderSection>
-            <TextInput
-              inputRef={register}
-              type="email"
-              id="email"
-              name="email"
-              label="Email"
-              variant="outlined"
-            />
-            <TextInput
-              inputRef={register}
-              type="password"
-              id="password"
-              name="password"
-              label="Password"
-              variant="outlined"
-            />
-            <Button color="primary" type="submit" variant="contained">
-              Login
-            </Button>
-          </Stack>
-        </CenteredPaper>
-      </form>
+      {isAuthenticated ? <LoggedInDash /> : <SignInForm />}
     </Background>
   );
 };
-
-const TextInput = styled(TextField)`
-  && {
-    margin: 1rem 0;
-  }
-`;
-
-const Logo = styled(LockIcon)`
-  color: #3f51b5;
-  font-size: 2rem;
-`;
-
-const HeaderSection = styled.div`
-  text-align: center;
-  max-width: 400px;
-  margin: 0 auto;
-`;
-
-const CenteredPaper = styled(Paper)`
-  max-width: 400px;
-  padding: 2rem;
-`;
 
 const Background = styled.div`
   width: 100vw;
@@ -80,9 +26,4 @@ const Background = styled.div`
   align-items: center;
   justify-content: center;
   display: flex;
-`;
-
-const Stack = styled.div`
-  display: flex;
-  flex-direction: column;
 `;
