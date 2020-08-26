@@ -2,7 +2,7 @@ import React from "react";
 import { useAuth } from "./useAuth";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import { Paper, Button, Typography } from "@material-ui/core";
+import { Paper, Button, Typography, TextField } from "@material-ui/core";
 import LockIcon from "@material-ui/icons/Lock";
 
 export const Home = () => {
@@ -20,21 +20,25 @@ export const Home = () => {
                 Super Awesome Application Inc.
               </Typography>
             </HeaderSection>
-            <input
-              ref={register}
+            <TextInput
+              inputRef={register}
+              type="email"
               id="email"
               name="email"
               label="Email"
               variant="outlined"
             />
-            <input
-              ref={register}
+            <TextInput
+              inputRef={register}
+              type="password"
               id="password"
               name="password"
               label="Password"
               variant="outlined"
             />
-            <Button type="submit">Login</Button>
+            <Button type="submit" variant="contained">
+              Login
+            </Button>
           </Stack>
         </CenteredPaper>
       </form>
@@ -42,11 +46,11 @@ export const Home = () => {
   );
 };
 
-// const TextInput = styled(TextField)`
-//   && {
-//     margin: 1rem 0;
-//   }
-// `;
+const TextInput = styled(TextField)`
+  && {
+    margin: 1rem 0;
+  }
+`;
 
 const Logo = styled(LockIcon)`
   color: #3f51b5;
