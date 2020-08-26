@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Security, useOktaAuth, LoginCallback } from "@okta/okta-react";
 import LockIcon from "@material-ui/icons/Lock";
-import { Button, Paper, TextField, Typography } from "@material-ui/core";
+import { Button, Paper, Typography } from "@material-ui/core";
 import { useForm } from "react-hook-form";
 import { OktaAuth } from "@okta/okta-auth-js";
 
@@ -33,20 +33,8 @@ const App = () => {
 };
 
 function Home() {
-  const { authState, authService } = useOktaAuth();
-  const [userInfo, setUserInfo] = useState(null);
-  const { register, handleSubmit, watch, errors } = useForm();
-
-  useEffect(() => {
-    if (!authState.isAuthenticated) {
-      // When user isn't authenticated, forget any user info
-      setUserInfo(null);
-    } else {
-      authService.getUser().then((info) => {
-        setUserInfo(info);
-      });
-    }
-  }, [authState, authService]);
+  const { authService } = useOktaAuth();
+  const { register, handleSubmit } = useForm();
 
   const onSubmit = async ({ email, password }) => {
     const oktaAuth = new OktaAuth(oktaConfig);
@@ -104,11 +92,11 @@ function Home() {
   );
 }
 
-const TextInput = styled(TextField)`
-  && {
-    margin: 1rem 0;
-  }
-`;
+// const TextInput = styled(TextField)`
+//   && {
+//     margin: 1rem 0;
+//   }
+// `;
 
 const Logo = styled(LockIcon)`
   color: #3f51b5;
