@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Paper, Button, Typography, TextField } from "@material-ui/core";
 import LockIcon from "@material-ui/icons/Lock";
 import { useAuth } from "./useAuth";
 import { Formik, Form } from "formik";
 
+const ERROR_MESSAGE = "The username or password you entered is incorrect";
+
 export const SignInForm = () => {
   const { login } = useAuth();
+  const [errorMessage, setErrorMessage] = useState("");
 
   return (
     <Formik
@@ -15,7 +18,12 @@ export const SignInForm = () => {
         password: "",
       }}
       onSubmit={async (values) => {
-        await login(values);
+        try {
+          await login(values);
+        } catch (e) {
+          console.warn(e);
+          setErrorMessage(ERROR_MESSAGE);
+        }
       }}
     >
       {({ values, handleChange, handleBlur }) => (
@@ -48,6 +56,7 @@ export const SignInForm = () => {
                 label="Password"
                 variant="outlined"
               />
+              {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
               <Button
                 disabled={!isFormComplete(values)}
                 color="primary"
@@ -63,6 +72,10 @@ export const SignInForm = () => {
     </Formik>
   );
 };
+
+const ErrorMessage = styled(Typography)`
+  color: #f44336;
+`;
 
 const isFormComplete = ({ email, password }) => {
   if (!email) return false;
@@ -83,12 +96,13 @@ const Logo = styled(LockIcon)`
 
 const HeaderSection = styled.div`
   text-align: center;
-  max-width: 400px;
   margin: 0 auto;
 `;
 
 const CenteredPaper = styled(Paper)`
   max-width: 400px;
+  width: 90vw;
+  margin: 2rem;
   padding: 2rem;
 `;
 
