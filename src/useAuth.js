@@ -13,7 +13,7 @@ export const oktaConfig = {
 export const useAuth = () => {
   const oktaAuth = new OktaAuth(oktaConfig);
   const [user, setUser] = useState(null);
-  const [loadingUser, setLoadingUser] = useState(false);
+  const [loadingUser, setLoadingUser] = useState(true);
   const {
     authService,
     authState: { isAuthenticated },

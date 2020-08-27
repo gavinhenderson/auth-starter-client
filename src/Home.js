@@ -8,10 +8,6 @@ import styled from "styled-components";
 export const Home = () => {
   const { isAuthenticated } = useAuth();
 
-  if (isAuthenticated) {
-    return <LoggedInDash />;
-  }
-
   return (
     <Background>
       {isAuthenticated ? <LoggedInDash /> : <SignInForm />}
