@@ -12,66 +12,77 @@ export const SignInForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   return (
-    <Formik
-      initialValues={{
-        email: "",
-        password: "",
-      }}
-      onSubmit={async (values) => {
-        try {
-          await login(values);
-        } catch (e) {
-          console.warn(e);
-          setErrorMessage(ERROR_MESSAGE);
-        }
-      }}
-    >
-      {({ values, handleChange, handleBlur }) => (
-        <Form>
-          <CenteredPaper>
-            <Stack>
-              <HeaderSection>
-                <Logo fontSize="large" />
-                <Typography variant="h5">
-                  Super Awesome Application Inc.
-                </Typography>
-              </HeaderSection>
-              <TextInput
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.email}
-                type="email"
-                id="email"
-                name="email"
-                label="Email"
-                variant="outlined"
-              />
-              <TextInput
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.password}
-                type="password"
-                id="password"
-                name="password"
-                label="Password"
-                variant="outlined"
-              />
-              {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-              <Button
-                disabled={!isFormComplete(values)}
-                color="primary"
-                type="submit"
-                variant="contained"
-              >
-                Login
-              </Button>
-            </Stack>
-          </CenteredPaper>
-        </Form>
-      )}
-    </Formik>
+    <Background>
+      <Formik
+        initialValues={{
+          email: "",
+          password: "",
+        }}
+        onSubmit={async (values) => {
+          try {
+            await login(values);
+          } catch (e) {
+            console.warn(e);
+            setErrorMessage(ERROR_MESSAGE);
+          }
+        }}
+      >
+        {({ values, handleChange, handleBlur }) => (
+          <Form>
+            <CenteredPaper>
+              <Stack>
+                <HeaderSection>
+                  <Logo fontSize="large" />
+                  <Typography variant="h5">
+                    Super Awesome Application Inc.
+                  </Typography>
+                </HeaderSection>
+                <TextInput
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.email}
+                  type="email"
+                  id="email"
+                  name="email"
+                  label="Email"
+                  variant="outlined"
+                />
+                <TextInput
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.password}
+                  type="password"
+                  id="password"
+                  name="password"
+                  label="Password"
+                  variant="outlined"
+                />
+                {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+                <Button
+                  disabled={!isFormComplete(values)}
+                  color="primary"
+                  type="submit"
+                  variant="contained"
+                >
+                  Login
+                </Button>
+              </Stack>
+            </CenteredPaper>
+          </Form>
+        )}
+      </Formik>
+    </Background>
   );
 };
+
+const Background = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background: #f5f5f5;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+`;
 
 const ErrorMessage = styled(Typography)`
   color: #f44336;
