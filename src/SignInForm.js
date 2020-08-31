@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Paper, Button, Typography, TextField } from "@material-ui/core";
+import { Paper, Button, Typography, TextField, Link } from "@material-ui/core";
 import LockIcon from "@material-ui/icons/Lock";
 import { useAuth } from "./useAuth";
 import { Formik, Form } from "formik";
+import { OktaWidget } from "./OktaWidget";
 
 const ERROR_MESSAGE = "The username or password you entered is incorrect";
 
 export const SignInForm = () => {
-  const { login } = useAuth();
+  const { login, registerUrl } = useAuth();
   const [errorMessage, setErrorMessage] = useState("");
 
   return (
     <Background>
+      <OktaWidget />
       <Formik
         initialValues={{
           email: "",
@@ -58,6 +60,10 @@ export const SignInForm = () => {
                   variant="outlined"
                 />
                 {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+                <NewAccountMessage>
+                  Dont have an account yet?{" "}
+                  <Link href={registerUrl}>Sign up here</Link>
+                </NewAccountMessage>
                 <Button
                   disabled={!isFormComplete(values)}
                   color="primary"
@@ -74,6 +80,10 @@ export const SignInForm = () => {
     </Background>
   );
 };
+
+const NewAccountMessage = styled(Typography)`
+  padding-bottom: 1rem;
+`;
 
 const Background = styled.div`
   width: 100vw;

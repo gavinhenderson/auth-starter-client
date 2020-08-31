@@ -33,6 +33,13 @@ export const useAuth = () => {
     }
   }, [loadUser, isAuthenticated]);
 
+  console.log({
+    authService,
+    oktaAuth,
+    oktaAuthKeys: Object.keys(oktaAuth),
+    signIn: oktaAuth.signIn,
+  });
+
   const login = async ({ email, password }) => {
     const { sessionToken } = await oktaAuth.signIn({
       username: email,
@@ -41,9 +48,11 @@ export const useAuth = () => {
     authService.redirect({ sessionToken });
   };
 
+  const registerUrl = "/test";
+
   const logout = async () => {
     await oktaAuth.signOut();
   };
 
-  return { login, isAuthenticated, user, loadingUser, logout };
+  return { registerUrl, login, isAuthenticated, user, loadingUser, logout };
 };
