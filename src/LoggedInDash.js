@@ -9,8 +9,6 @@ export const LoggedInDash = () => {
 
   const showEmailVerifyBanner = !loadingUser && !emailVerified;
 
-  console.log(showEmailVerifyBanner);
-
   return (
     <>
       {showEmailVerifyBanner && (
