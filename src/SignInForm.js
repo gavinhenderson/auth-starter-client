@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { Paper, Button, Typography, TextField, Link } from "@material-ui/core";
 import LockIcon from "@material-ui/icons/Lock";
 import { useAuth } from "./useAuth";
+import { Link as RouterLink } from "react-router-dom";
+
 import { Formik, Form } from "formik";
 
 const ERROR_MESSAGE = "The username or password you entered is incorrect";
@@ -60,7 +62,9 @@ export const SignInForm = () => {
                 {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
                 <NewAccountMessage>
                   Dont have an account yet?{" "}
-                  <Link href={registerUrl}>Sign up here</Link>
+                  <RouterLink as={Link} to={registerUrl}>
+                    Sign up here
+                  </RouterLink>
                 </NewAccountMessage>
                 <Button
                   disabled={!isFormComplete(values)}
