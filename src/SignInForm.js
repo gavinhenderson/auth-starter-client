@@ -4,7 +4,6 @@ import { Paper, Button, Typography, TextField, Link } from "@material-ui/core";
 import LockIcon from "@material-ui/icons/Lock";
 import { useAuth } from "./useAuth";
 import { Formik, Form } from "formik";
-import { OktaWidget } from "./OktaWidget";
 
 const ERROR_MESSAGE = "The username or password you entered is incorrect";
 
@@ -14,7 +13,6 @@ export const SignInForm = () => {
 
   return (
     <Background>
-      <OktaWidget />
       <Formik
         initialValues={{
           email: "",

@@ -3,6 +3,7 @@ import * as OktaSignIn from "@okta/okta-signin-widget";
 import "@okta/okta-signin-widget/dist/css/okta-sign-in.min.css";
 import lockLogo from "./lock.svg";
 import { oktaConfig } from "./useAuth";
+import styled from "styled-components";
 
 export const OktaWidget = () => {
   useEffect(() => {
@@ -35,6 +36,7 @@ export const OktaWidget = () => {
         // Used to enable registration feature on the widget.
         // https://github.com/okta/okta-signin-widget#feature-flags
         registration: true, // REQUIRED
+        router: true,
       },
       brandName: "Super Awesome Application Inc.",
       i18n: {
@@ -70,8 +72,17 @@ export const OktaWidget = () => {
   }, []);
 
   return (
-    <div>
+    <Background>
       <div id="sign-in-widget" />
-    </div>
+    </Background>
   );
 };
+
+const Background = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background: #f5f5f5;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+`;
