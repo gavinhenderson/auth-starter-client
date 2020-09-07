@@ -1,15 +1,19 @@
 import React from "react";
 import { BrowserRouter, Route } from "react-router-dom";
-import { oktaConfig } from "./useAuth";
 import LoginCallback from "@okta/okta-react/dist/LoginCallback";
-import Security from "@okta/okta-react/dist/Security";
+
 import { Home } from "./Home";
 import { OktaWidget } from "./OktaWidget";
+import { AuthToggle } from "./AuthToggle";
+import { AuthJunk } from "./useAuth";
 
 export const Router = () => {
   return (
     <BrowserRouter>
-      <Security {...oktaConfig}>
+      <AuthJunk>
+        <Route path="/">
+          <AuthToggle />
+        </Route>
         <Route path="/" exact>
           <Home />
         </Route>
@@ -19,7 +23,7 @@ export const Router = () => {
         <Route path="/implicit/callback">
           <LoginCallback />
         </Route>
-      </Security>
+      </AuthJunk>
     </BrowserRouter>
   );
 };

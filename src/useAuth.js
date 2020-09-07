@@ -1,6 +1,8 @@
+import React, { useContext } from "react";
 import { OktaAuth } from "@okta/okta-auth-js";
 import { useOktaAuth } from "@okta/okta-react/dist/OktaContext";
 import { useEffect, useState, useCallback } from "react";
+import { default as OktaSecurity } from "@okta/okta-react/dist/Security";
 
 export const oktaConfig = {
   clientId: "0oapy5xhfcUOfOi8G4x6",
@@ -10,7 +12,15 @@ export const oktaConfig = {
   pkce: true,
 };
 
-export const useAuth = () => {
+const AuthContext = React.createContext();
+
+export const AuthJunk = ({ children }) => (
+  <OktaSecurity {...oktaConfig}>
+    <AuthState>{children}</AuthState>
+  </OktaSecurity>
+);
+
+const AuthState = ({ children }) => {
   const oktaAuth = new OktaAuth(oktaConfig);
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
@@ -19,12 +29,48 @@ export const useAuth = () => {
     authState: { isAuthenticated },
   } = useOktaAuth();
 
+  return (
+    <>
+      <AuthContext.Provider
+        value={{
+          okta: {
+            oktaAuth,
+            user,
+            setUser,
+            loadingUser,
+            setLoadingUser,
+            authService,
+            isAuthenticated,
+          },
+        }}
+      >
+        {children}
+      </AuthContext.Provider>
+    </>
+  );
+};
+
+export const useAuth = () => {
+  const result = useContext(AuthContext);
+
+  const {
+    okta: {
+      oktaAuth,
+      user,
+      setUser,
+      loadingUser,
+      setLoadingUser,
+      authService,
+      isAuthenticated,
+    },
+  } = result;
+
   const loadUser = useCallback(async () => {
     setLoadingUser(true);
     const fetchedUser = await authService.getUser();
     setUser(fetchedUser);
     setLoadingUser(false);
-  }, [authService]);
+  }, [authService, setUser, setLoadingUser]);
 
   // Apparently use effects have to synchronus
   useEffect(() => {
