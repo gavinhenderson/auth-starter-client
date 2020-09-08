@@ -22,6 +22,7 @@ export const AuthJunk = ({ children }) => (
 
 const AuthState = ({ children }) => {
   const oktaAuth = new OktaAuth(oktaConfig);
+  const [authProvider, setAuthProvider] = useState("okta");
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const {
@@ -33,6 +34,8 @@ const AuthState = ({ children }) => {
     <>
       <AuthContext.Provider
         value={{
+          authProvider,
+          setAuthProvider,
           okta: {
             oktaAuth,
             user,
@@ -50,9 +53,7 @@ const AuthState = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
-  const result = useContext(AuthContext);
-
+const useOkta = () => {
   const {
     okta: {
       oktaAuth,
@@ -63,7 +64,7 @@ export const useAuth = () => {
       authService,
       isAuthenticated,
     },
-  } = result;
+  } = useContext(AuthContext);
 
   const loadUser = useCallback(async () => {
     setLoadingUser(true);
@@ -94,4 +95,28 @@ export const useAuth = () => {
   };
 
   return { registerUrl, login, isAuthenticated, user, loadingUser, logout };
+};
+
+const useAuth0 = () => {
+  return {
+    registerUrl: "/",
+    login: () => {},
+    isAuthenticated: true,
+    user: {},
+    loadingUser: false,
+    logout: () => {},
+  };
+};
+
+export const useAuth = () => {
+  const { authProvider } = useContext(AuthContext);
+
+  const okta = useOkta();
+  const auth0 = useAuth0();
+
+  if (authProvider === "okta") {
+    return okta;
+  } else {
+    return auth0;
+  }
 };
