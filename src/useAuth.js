@@ -109,14 +109,24 @@ const useAuth0 = () => {
 };
 
 export const useAuth = () => {
-  const { authProvider } = useContext(AuthContext);
+  const { authProvider, setAuthProvider } = useContext(AuthContext);
+
+  const toggleProvider = () => {
+    const newProvider = authProvider === "okta" ? "auth0" : "okta";
+    setAuthProvider(newProvider);
+  };
 
   const okta = useOkta();
   const auth0 = useAuth0();
 
+  const both = {
+    authProvider,
+    toggleProvider,
+  };
+
   if (authProvider === "okta") {
-    return okta;
+    return { ...okta, ...both };
   } else {
-    return auth0;
+    return { ...auth0, ...both };
   }
 };

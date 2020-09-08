@@ -1,12 +1,17 @@
 import React from "react";
 import { Switch, Typography } from "@material-ui/core";
 import styled from "styled-components";
+import { useAuth } from "./useAuth";
 
 export const AuthToggle = () => {
+  const { authProvider, toggleProvider } = useAuth();
+
+  const checked = authProvider !== "okta";
+
   return (
     <ToggleContainer>
       <Typography>Okta</Typography>
-      <Switch />
+      <Switch checked={checked} onClick={toggleProvider} />
       <Typography>Auth0</Typography>
     </ToggleContainer>
   );
