@@ -3,6 +3,8 @@ import { OktaAuth } from "@okta/okta-auth-js";
 import { useOktaAuth } from "@okta/okta-react/dist/OktaContext";
 import { useEffect, useState, useCallback } from "react";
 import { default as OktaSecurity } from "@okta/okta-react/dist/Security";
+import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
+import auth0 from "auth0-js";
 
 export const oktaConfig = {
   clientId: "0oapy5xhfcUOfOi8G4x6",
@@ -12,23 +14,36 @@ export const oktaConfig = {
   pkce: true,
 };
 
+const auth0Config = {
+  domain: "gavinhenderson.eu.auth0.com",
+  clientId: "IqOTpP7JnPsKMruoHUPQMYcwP6iQBgI2",
+  redirectUri: window.location.origin,
+};
+
 const AuthContext = React.createContext();
 
 export const AuthJunk = ({ children }) => (
   <OktaSecurity {...oktaConfig}>
-    <AuthState>{children}</AuthState>
+    <Auth0Provider {...auth0Config}>
+      <AuthState>{children}</AuthState>
+    </Auth0Provider>
   </OktaSecurity>
 );
 
 const AuthState = ({ children }) => {
   const oktaAuth = new OktaAuth(oktaConfig);
-  const [authProvider, setAuthProvider] = useState("okta");
+  const [authProvider, setAuthProvider] = useState("auth0");
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const {
     authService,
     authState: { isAuthenticated },
   } = useOktaAuth();
+
+  const auth0Service = new auth0.WebAuth({
+    domain: "gavinhenderson.eu.auth0.com",
+    clientID: "IqOTpP7JnPsKMruoHUPQMYcwP6iQBgI2",
+  });
 
   return (
     <>
@@ -44,6 +59,9 @@ const AuthState = ({ children }) => {
             setLoadingUser,
             authService,
             isAuthenticated,
+          },
+          auth0: {
+            authService: auth0Service,
           },
         }}
       >
@@ -97,14 +115,32 @@ const useOkta = () => {
   return { registerUrl, login, isAuthenticated, user, loadingUser, logout };
 };
 
-const useAuth0 = () => {
+const useAuth0Wrapper = () => {
+  const { logout, user, isAuthenticated, isLoading } = useAuth0();
+  const {
+    auth0: { authService },
+  } = useContext(AuthContext);
+
+  const login = async ({ email, password }) => {
+    authService.login(
+      {
+        responseType: "token",
+        username: email,
+        password,
+        scope: "openid email profile",
+        realm: "Username-Password-Authentication",
+      },
+      console.log
+    );
+  };
+
   return {
     registerUrl: "/",
-    login: () => {},
-    isAuthenticated: true,
+    login,
+    isAuthenticated,
     user: {},
-    loadingUser: false,
-    logout: () => {},
+    loadingUser: isLoading,
+    logout,
   };
 };
 
@@ -117,7 +153,7 @@ export const useAuth = () => {
   };
 
   const okta = useOkta();
-  const auth0 = useAuth0();
+  const auth0 = useAuth0Wrapper();
 
   const both = {
     authProvider,
