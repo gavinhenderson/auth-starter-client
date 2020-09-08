@@ -116,7 +116,7 @@ const useOkta = () => {
 };
 
 const useAuth0Wrapper = () => {
-  const { logout, user, isAuthenticated, isLoading } = useAuth0();
+  const { logout, isAuthenticated, isLoading } = useAuth0();
   const {
     auth0: { authService },
   } = useContext(AuthContext);
