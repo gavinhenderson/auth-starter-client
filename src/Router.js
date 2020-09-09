@@ -5,12 +5,12 @@ import LoginCallback from "@okta/okta-react/dist/LoginCallback";
 import { Home } from "./Home";
 import { OktaWidget } from "./OktaWidget";
 import { AuthToggle } from "./AuthToggle";
-import { AuthJunk } from "./useAuth";
+import { AuthJunk, history } from "./useAuth";
 
 export const Router = () => {
   return (
-    <BrowserRouter>
-      <AuthJunk>
+    <AuthJunk>
+      <BrowserRouter history={history}>
         <Route path="/">
           <AuthToggle />
         </Route>
@@ -23,7 +23,7 @@ export const Router = () => {
         <Route path="/implicit/callback">
           <LoginCallback />
         </Route>
-      </AuthJunk>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthJunk>
   );
 };

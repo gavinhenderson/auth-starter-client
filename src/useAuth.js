@@ -5,6 +5,7 @@ import { useEffect, useState, useCallback } from "react";
 import { default as OktaSecurity } from "@okta/okta-react/dist/Security";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import auth0 from "auth0-js";
+import { createBrowserHistory } from "history";
 
 export const oktaConfig = {
   clientId: "0oapy5xhfcUOfOi8G4x6",
@@ -14,10 +15,18 @@ export const oktaConfig = {
   pkce: true,
 };
 
+export const history = createBrowserHistory();
+
+const onRedirectCallback = (appState) => {
+  // Use the router's history module to replace the url
+  history.replace(appState?.returnTo || window.location.pathname);
+};
+
 const auth0Config = {
   domain: "gavinhenderson.eu.auth0.com",
   clientId: "IqOTpP7JnPsKMruoHUPQMYcwP6iQBgI2",
-  redirectUri: window.location.origin,
+  redirectUri: window.location.origin + "/auth0/implicit/callback",
+  onRedirectCallback: onRedirectCallback,
 };
 
 const AuthContext = React.createContext();
@@ -43,6 +52,7 @@ const AuthState = ({ children }) => {
   const auth0Service = new auth0.WebAuth({
     domain: "gavinhenderson.eu.auth0.com",
     clientID: "IqOTpP7JnPsKMruoHUPQMYcwP6iQBgI2",
+    redirectUri: window.location.origin + "/auth0/implicit/callback",
   });
 
   return (
@@ -116,7 +126,10 @@ const useOkta = () => {
 };
 
 const useAuth0Wrapper = () => {
-  const { logout, isAuthenticated, isLoading } = useAuth0();
+  const { logout, isAuthenticated, isLoading, user } = useAuth0();
+
+  console.log({ user });
+
   const {
     auth0: { authService },
   } = useContext(AuthContext);
@@ -127,10 +140,11 @@ const useAuth0Wrapper = () => {
         responseType: "token",
         username: email,
         password,
-        scope: "openid email profile",
         realm: "Username-Password-Authentication",
       },
-      console.log
+      (...response) => {
+        console.log("response", response);
+      }
     );
   };
 
