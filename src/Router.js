@@ -1,16 +1,16 @@
 import React from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter as ReactRouter, Route } from "react-router-dom";
 import LoginCallback from "@okta/okta-react/dist/LoginCallback";
 
 import { Home } from "./Home";
 import { OktaWidget } from "./OktaWidget";
 import { AuthToggle } from "./AuthToggle";
-import { AuthJunk, history } from "./useAuth";
+import { AuthJunk, Auth0Callback } from "./useAuth";
 
 export const Router = () => {
   return (
-    <AuthJunk>
-      <BrowserRouter history={history}>
+    <ReactRouter>
+      <AuthJunk>
         <Route path="/">
           <AuthToggle />
         </Route>
@@ -23,7 +23,10 @@ export const Router = () => {
         <Route path="/implicit/callback">
           <LoginCallback />
         </Route>
-      </BrowserRouter>
-    </AuthJunk>
+        <Route path="/auth0/implicit/callback">
+          <Auth0Callback />
+        </Route>
+      </AuthJunk>
+    </ReactRouter>
   );
 };

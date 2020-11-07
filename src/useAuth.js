@@ -6,6 +6,7 @@ import { default as OktaSecurity } from "@okta/okta-react/dist/Security";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import auth0 from "auth0-js";
 import { createBrowserHistory } from "history";
+import { useHistory, useParams } from "react-router-dom";
 
 export const oktaConfig = {
   clientId: "0oapy5xhfcUOfOi8G4x6",
@@ -17,31 +18,48 @@ export const oktaConfig = {
 
 export const history = createBrowserHistory();
 
-const onRedirectCallback = (appState) => {
-  // Use the router's history module to replace the url
-  history.replace(appState?.returnTo || window.location.pathname);
-};
-
 const auth0Config = {
   domain: "gavinhenderson.eu.auth0.com",
   clientId: "IqOTpP7JnPsKMruoHUPQMYcwP6iQBgI2",
   redirectUri: window.location.origin + "/auth0/implicit/callback",
-  onRedirectCallback: onRedirectCallback,
 };
 
 const AuthContext = React.createContext();
 
 export const AuthJunk = ({ children }) => (
-  <OktaSecurity {...oktaConfig}>
-    <Auth0Provider {...auth0Config}>
+  <Auth0Provider {...auth0Config}>
+    <OktaSecurity {...oktaConfig}>
       <AuthState>{children}</AuthState>
-    </Auth0Provider>
-  </OktaSecurity>
+    </OktaSecurity>
+  </Auth0Provider>
 );
+
+export const Auth0Callback = () => {
+  const { code } = useParams();
+  const authStuff = useAuth0();
+  const history = useHistory();
+
+  const {
+    auth0: { authService },
+  } = useContext(AuthContext);
+
+  console.log({ authStuff, code, authService });
+
+  authService.crossOriginVerification();
+
+  // props.auth.handleAuthentication().then(() => {
+  // history.push("/");
+  // });
+
+  return <div>Loading user profile.</div>;
+};
 
 const AuthState = ({ children }) => {
   const oktaAuth = new OktaAuth(oktaConfig);
-  const [authProvider, setAuthProvider] = useState("auth0");
+
+  const initialAuthProvider = localStorage.getItem("authProvider");
+
+  const [authProvider, setAuthProvider] = useState(initialAuthProvider);
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const {
@@ -126,9 +144,7 @@ const useOkta = () => {
 };
 
 const useAuth0Wrapper = () => {
-  const { logout, isAuthenticated, isLoading, user } = useAuth0();
-
-  console.log({ user });
+  const { logout, isAuthenticated, isLoading } = useAuth0();
 
   const {
     auth0: { authService },
@@ -140,7 +156,7 @@ const useAuth0Wrapper = () => {
         responseType: "token",
         username: email,
         password,
-        realm: "Username-Password-Authentication",
+        // realm: "Username-Password-Authentication",
       },
       (...response) => {
         console.log("response", response);
@@ -164,6 +180,7 @@ export const useAuth = () => {
   const toggleProvider = () => {
     const newProvider = authProvider === "okta" ? "auth0" : "okta";
     setAuthProvider(newProvider);
+    localStorage.setItem("authProvider", newProvider);
   };
 
   const okta = useOkta();
